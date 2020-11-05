@@ -8,10 +8,15 @@ public class DeployEnemy : MonoBehaviour
     public float respawnTime = 1.0f;
     private Vector2 screenBounds;
 
+    private float objectWidth;
+    private float objectHeight;
+
     // Start is called before the first frame update
     void Start()
     {
-        screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
+        screenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+        objectWidth = EnemyPrefab.transform.GetComponent<Collider2D>().bounds.size.x / 2;
+        objectHeight = EnemyPrefab.transform.GetComponent<Collider2D>().bounds.size.y / 2;
         StartCoroutine(EnemyWave());
     }
 
@@ -24,7 +29,7 @@ public class DeployEnemy : MonoBehaviour
     private void spawnEnemy()
     {
         GameObject a = Instantiate(EnemyPrefab) as GameObject;
-        a.transform.position = new Vector2(screenBounds.x + 5, Random.Range(-screenBounds.y, screenBounds.y));
+        a.transform.position = new Vector2(screenBounds.x + 5, Random.Range(-screenBounds.y + objectHeight, screenBounds.y - objectHeight));
     }
 
     IEnumerator EnemyWave()

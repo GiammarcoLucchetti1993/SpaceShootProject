@@ -26,7 +26,14 @@ public class BulletEnemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Destroy(other.gameObject);
-        Destroy(this.gameObject);
+        if(other.tag == "Enemy")
+        {
+
+        }
+        else
+        {
+            Destroy(other.gameObject);
+            Destroy(this.gameObject);
+        }
     }
 }

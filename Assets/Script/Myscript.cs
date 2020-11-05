@@ -26,9 +26,9 @@ public class Myscript : MonoBehaviour
     {
         joystick = FindObjectOfType<Joystick>();
         joybutton = FindObjectOfType<JoyButton>();
-        screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
-        objectWidth = transform.GetComponent<SpriteRenderer>().bounds.size.x / 2;
-        objectHeight = transform.GetComponent<SpriteRenderer>().bounds.size.y / 2;
+        screenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+        objectWidth = transform.GetComponent<Collider2D>().bounds.size.x / 2;
+        objectHeight = transform.GetComponent<Collider2D>().bounds.size.y /2;
     }
 
     // Update is called once per frame
@@ -53,18 +53,19 @@ public class Myscript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        //if(other.tag == "enemy")
-        SceneManager.LoadScene("GameOver");
-        Destroy(other.gameObject);
-        //this.gameObject.SetActive(false);   
-        Destroy(this.gameObject);
+        if(other.tag == "Enemy" || other.tag == "EnemyBullet")
+        {
+            SceneManager.LoadScene("GameOver");
+            Destroy(other.gameObject);
+            Destroy(this.gameObject);
+        }
     }
 
     void LateUpdate()
     {
         Vector3 viewPos = transform.position;
         viewPos.x = Mathf.Clamp(viewPos.x, -screenBounds.x + objectWidth , screenBounds.x - objectWidth);
-        viewPos.y = Mathf.Clamp(viewPos.y, -screenBounds.y + objectHeight/2f , screenBounds.y - objectHeight/2f);
+        viewPos.y = Mathf.Clamp(viewPos.y, -screenBounds.y + objectHeight , screenBounds.y - objectHeight);
         transform.position = viewPos;
     }
 
@@ -72,7 +73,7 @@ public class Myscript : MonoBehaviour
     public void ShootBullet()
     {
         GameObject b = Instantiate(bulletPrefab) as GameObject;
-        b.transform.position = new Vector2(this.transform.position.x + objectWidth *1.4f, this.transform.position.y);
+        b.transform.position = new Vector2(this.transform.position.x + objectWidth, this.transform.position.y);
     }
 
     public void AddScore()

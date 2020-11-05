@@ -15,6 +15,9 @@ public class EnemySpawn : MonoBehaviour
     public float timeShoot = 2f;
     public float time;
 
+    private float objectWidth;
+    private float objectHeight;
+
     public bool shoot;
 
 
@@ -23,8 +26,9 @@ public class EnemySpawn : MonoBehaviour
     {
         rb = this.GetComponent<Rigidbody2D>();
         rb.velocity = new Vector2(-speed, 0);
-        screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
-        //StartCoroutine(EnemyShoot());
+        screenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+        objectWidth = transform.GetComponent<Collider2D>().bounds.size.x / 2;
+        objectHeight = transform.GetComponent<Collider2D>().bounds.size.y / 2;
         shoot = true;
 
     }
@@ -32,40 +36,21 @@ public class EnemySpawn : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.x < screenBounds.x -5)
+        if (transform.position.x < -screenBounds.x - objectWidth)
         {
-            Debug.Log(screenBounds.x);
             Destroy(this.gameObject);
         }
-        if(shoot == true && transform.position.x < screenBounds.x - 0.25f)
+        if (shoot == true && transform.position.x < screenBounds.x - objectWidth)
         {
             ShootBullet();
             //time = 0;
             shoot = false;
         }
-        if(transform.position.x < screenBounds.x - 3f)
-        {
-            ShootBullet();
-        }
     }
 
     public void ShootBullet()
     {
-        //if (transform.position.x < screenBounds.x -0.25f)
-        //{
-            GameObject b = Instantiate(bulletEnemyPrefab) as GameObject;
-            b.transform.position = new Vector2(this.transform.position.x - 0.4f, this.transform.position.y);
-        //}
+        GameObject b = Instantiate(bulletEnemyPrefab) as GameObject;
+        b.transform.position = new Vector2(this.transform.position.x - objectWidth * 2, this.transform.position.y);
     }
-
-    //IEnumerator EnemyShoot()
-    //{
-    //    while (true)
-    //    {
-    //        yield return new WaitForSeconds(timeToShoot);
-    //        ShootBullet();
-    //    }
-
-    //}
-
 }
